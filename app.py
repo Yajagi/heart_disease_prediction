@@ -3,29 +3,33 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-
-saved_data = joblib.load("heart_model.pkl")
-model = saved_data["model"]
-features = saved_data["features"]
-
+# Configure the page
 st.set_page_config(
     page_title="Heart Disease Prediction",
     page_icon="❤️",
     layout="wide"
 )
 
+# Load the saved model
+saved_data = joblib.load("heart_model.pkl")
+model = saved_data["model"]
+features = saved_data["features"]
+
+# Website title and description
 st.title("❤️ Heart Disease Prediction")
+
 st.write(
     "Enter the required measurements to get a prediction "
     "from your trained machine learning model."
 )
 
 st.warning(
-    
-    "medical diagnosis or a substitute for professional care."
+    "This tool is for educational purposes only. "
+    "It is not a medical diagnosis or a substitute "
+    "for professional care."
 )
 
-
+# Options for categorical features
 categorical_options = {
     "sex": [0, 1],
     "cp": [0, 1, 2, 3],
@@ -37,7 +41,7 @@ categorical_options = {
     "thal": [0, 1, 2, 3]
 }
 
-
+# Default values for numerical features
 numeric_defaults = {
     "age": (45, 1, 120),
     "trestbps": (120, 50, 250),
@@ -51,16 +55,17 @@ input_values = {}
 
 st.subheader("Enter patient measurements")
 
+# Input form
 with st.form("prediction_form"):
     columns = st.columns(2)
 
     for i, feature in enumerate(features):
         with columns[i % 2]:
+
             if feature in categorical_options:
-                options = categorical_options[feature]
                 input_values[feature] = st.selectbox(
-                    f"{feature}",
-                    options=options,
+                    feature,
+                    options=categorical_options[feature],
                     key=f"input_{feature}"
                 )
 
@@ -72,7 +77,10 @@ with st.form("prediction_form"):
                     min_value=float(minimum),
                     max_value=float(maximum),
                     value=float(default),
-                    step=0.1 if feature == "oldpeak" else 1.0,
+                    step=(
+                        0.1 if feature == "oldpeak"
+                        else 1.0
+                    ),
                     key=f"input_{feature}"
                 )
 
@@ -87,31 +95,39 @@ with st.form("prediction_form"):
         use_container_width=True
     )
 
+# Prediction section
 if submitted:
+
     if all(feature in input_values for feature in features):
+
         input_df = pd.DataFrame(
             [[input_values[feature] for feature in features]],
             columns=features
         )
 
         prediction = model.predict(input_df)[0]
-        st.write("Prediction:", prediction)
 
         st.subheader("Prediction Result")
 
         if prediction == 1:
-    st.warning(
-        "The model predicts class 1. "
-        "This is not a medical diagnosis."
-    )
-elif prediction == 0:
-    st.success(
-        "The model predicts class 0. "
-        "This does not rule out heart disease."
-    )
-else:
-    st.info(f"The model returned class {prediction}.")
+            st.warning(
+                "The model predicts class 1. "
+                "This is not a medical diagnosis."
+            )
 
-st.caption(f"Predicted class: {prediction}")
+        elif prediction == 0:
+            st.success(
+                "The model predicts class 0. "
+                "This does not rule out heart disease."
+            )
 
-        
+        else:
+            st.info(
+                f"The model returned class {prediction}. "
+                "Its meaning must be verified from the "
+                "model's training labels."
+            )
+
+        st.caption(f"Predicted class: {prediction}")
+
+
