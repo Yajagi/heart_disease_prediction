@@ -114,4 +114,4 @@ else:
 
 st.caption(f"Predicted class: {prediction}")
 
-        st.caption(f"Predicted class: {prediction}")
+        
