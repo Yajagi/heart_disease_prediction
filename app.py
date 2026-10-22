@@ -100,14 +100,18 @@ if submitted:
         st.subheader("Prediction Result")
 
         if prediction == 1:
-            st.warning(
-                "The model predicts class 1. "
-                "Please do not interpret this result as a diagnosis."
-            )
-        else:
-            st.success(
-                "The model predicts class 0. "
-                "This does not rule out heart disease."
-            )
+    st.warning(
+        "The model predicts class 1. "
+        "This is not a medical diagnosis."
+    )
+elif prediction == 0:
+    st.success(
+        "The model predicts class 0. "
+        "This does not rule out heart disease."
+    )
+else:
+    st.info(f"The model returned class {prediction}.")
+
+st.caption(f"Predicted class: {prediction}")
 
         st.caption(f"Predicted class: {prediction}")
