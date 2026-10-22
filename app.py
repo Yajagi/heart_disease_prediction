@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Load the saved model
+
 saved_data = joblib.load("heart_model.pkl")
 model = saved_data["model"]
 features = saved_data["features"]
