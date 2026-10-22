@@ -3,19 +3,18 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Configure the page
+
 st.set_page_config(
     page_title="Heart Disease Prediction",
     page_icon="❤️",
     layout="wide"
 )
 
-# Load the saved model
 saved_data = joblib.load("heart_model.pkl")
 model = saved_data["model"]
 features = saved_data["features"]
 
-# Website title and description
+
 st.title("❤️ Heart Disease Prediction")
 
 st.write(
@@ -29,7 +28,7 @@ st.warning(
     "for professional care."
 )
 
-# Options for categorical features
+
 categorical_options = {
     "sex": [0, 1],
     "cp": [0, 1, 2, 3],
@@ -41,7 +40,7 @@ categorical_options = {
     "thal": [0, 1, 2, 3]
 }
 
-# Default values for numerical features
+
 numeric_defaults = {
     "age": (45, 1, 120),
     "trestbps": (120, 50, 250),
@@ -55,7 +54,7 @@ input_values = {}
 
 st.subheader("Enter patient measurements")
 
-# Input form
+
 with st.form("prediction_form"):
     columns = st.columns(2)
 
@@ -95,7 +94,7 @@ with st.form("prediction_form"):
         use_container_width=True
     )
 
-# Prediction section
+
 if submitted:
 
     if all(feature in input_values for feature in features):
