@@ -95,6 +95,7 @@ if submitted:
         )
 
         prediction = model.predict(input_df)[0]
+        st.write("Prediction:", prediction)
 
         st.subheader("Prediction Result")
 
